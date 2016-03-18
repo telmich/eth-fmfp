@@ -1,5 +1,6 @@
 {- https://codeboard.io/projects/15109 DFA -}
 
+import Prelude hiding (Word)
 import Data.Char -- chr, ord
 
 {- (a) -}
@@ -10,7 +11,7 @@ type DFA a =
   , State -- initial state
   , State -> a -> State -- transition function
   , State -> Bool) -- test for final state
-type Word2 a = [a]
+type Word a = [a]
 
 
 myokword = "12"
@@ -53,25 +54,25 @@ finalState (_, _, _, state) = state
 {- (b) -}
 
 {- for testing -}
-takefirststep :: DFA a -> Word2 a -> State -- why does takeonestep :: DFA a -> Word2 b -> State  not work?
+takefirststep :: DFA a -> Word a -> State -- why does takeonestep :: DFA a -> Word b -> State  not work?
 takefirststep dfa (x:xs) = transition dfa (initial dfa) x
 
 {- traverse using standard recursion -}
-traverse2 :: DFA a -> Word2 a -> State -> State
+traverse2 :: DFA a -> Word a -> State -> State
 traverse2 dfa [] qx = qx
 traverse2 dfa (x:xs) qx = traverse2 dfa xs (delta qx x)
   where
     delta = transition dfa
 
 {- traverse using foldl -> start from left and continue to right -}
-traverse3 :: DFA a -> Word2 a -> State -> State
+traverse3 :: DFA a -> Word a -> State -> State
 traverse3 dfa word qx = foldl delta q0 word
   where
     delta = transition dfa
     q0 = initial dfa
 
 {- traverse w/ check for final state -}
-accepts :: DFA a -> Word2 a -> Bool
+accepts :: DFA a -> Word a -> Bool
 accepts dfa word = isfinal qreal
   where
     q0        = initial dfa
