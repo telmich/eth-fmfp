@@ -56,25 +56,28 @@ finalState (_, _, _, state) = state
 takefirststep :: DFA a -> Word2 a -> State -- why does takeonestep :: DFA a -> Word2 b -> State  not work?
 takefirststep dfa (x:xs) = transition dfa (initial dfa) x
 
+{- traverse using standard recursion -}
 traverse2 :: DFA a -> Word2 a -> State -> State
 traverse2 dfa [] qx = qx
 traverse2 dfa (x:xs) qx = traverse2 dfa xs (delta qx x)
   where
     delta = transition dfa
 
--- traverse dfa (x:xs) qx = traverse dfa delta
--- transition dfa (initial dfa) x
-
-
-{- accepts :: DFA a -> Word2 a -> Bool
-accepts dfa word = reachesFinalState dfa word
+{- traverse using foldl -> start from left and continue to right -}
+traverse3 :: DFA a -> Word2 a -> State -> State
+traverse3 dfa word qx = foldl delta q0 word
   where
-    reachesFinalState dfa word = True
-    where
-      goToLastState dfa word = foldl delta word
-      where
-        delta = transition dfa
--}
+    delta = transition dfa
+    q0 = initial dfa
+
+{- traverse w/ check for final state -}
+accepts :: DFA a -> Word2 a -> Bool
+accepts dfa word = isfinal qreal
+  where
+    q0        = initial dfa
+    isfinal   = finalState dfa
+    qreal     = traverse3 dfa word q0
+
 
 {- https://codeboard.io/projects/13585 -}
 {-
