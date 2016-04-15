@@ -47,6 +47,20 @@ instance Functor NicoD where
   fmap f (NicoNothing) = NicoNothing
   fmap f (NicoList nl xs) = (NicoList (f nl) (fmap f xs))
 
+-- λ> fmap (+3) h
+
 instance Foldable NicoD where
   foldMap f NicoNothing = mempty
   foldMap f (NicoList nl xs) = f nl `mappend` foldMap f xs
+
+-- λ> foldr (+) 0 h
+
+
+-- Show only "good ints"
+aGoodInt :: Int -> Maybe Int
+aGoodInt n = if isgood n then Just n else Nothing where
+  isgood n = elem 0 [ n `mod` x | x <- [23, 42] ]
+
+
+-- use bind for retrieving goodBigInts
+goodBigInt n = aGoodInt n >>= (\x -> if x > 1024 then Just n else Nothing)
