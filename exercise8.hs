@@ -146,7 +146,7 @@ Proof by induction over list xs
   QED
 
   Step case:
-    Step case: Show that P(zs) implies P(x:y:zs).
+    Step case: Show that P(xs) implies P(x:y:xs).
     IH: srclen (encode’ (decode xs) n z cs) = (srclen xs) + n + (srclen cs))
 
     To prove:
